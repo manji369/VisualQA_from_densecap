@@ -11,8 +11,8 @@ def load():
 	return embedding_matrix
 
 def load_idx():
-	path = 'embeddings/word_idx'
-	with open(path,'r') as file:
+	path = 'embeddings/word_idx_1'
+	with open(path,'rb') as file:
 		word_idx = pickle.load(file)
 	return word_idx
 

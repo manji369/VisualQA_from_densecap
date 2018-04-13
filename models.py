@@ -1,7 +1,8 @@
 import numpy as np
 import embedding
 from keras.models import Sequential
-from keras.layers import Dense, Embedding, LSTM, Merge, Reshape, Dropout, Convolution2D, MaxPooling2D, ZeroPadding2D, Flatten
+from keras.layers import Dense, Embedding, LSTM, Merge, Reshape, Dropout, Convolution2D, MaxPooling2D, ZeroPadding2D, Flatten, Convolution3D, MaxPooling3D
+MAX_SEQUENCE_LENGTH = 13
 
 def vis_lstm():
 	embedding_matrix = embedding.load()
@@ -11,23 +12,31 @@ def vis_lstm():
 		embedding_matrix.shape[1],
 		weights = [embedding_matrix],
 		trainable = False))
-	
+
 	image_model = Sequential()
 	image_model.add(Dense(
 		embedding_matrix.shape[1],
 		input_dim=4096,
 		activation='linear'))
 	image_model.add(Reshape((1,embedding_matrix.shape[1])))
+
+	image_model1 = Sequential()
+	image_model1.add(Convolution3D(10, 3, 100, 10,
+            border_mode='same',
+            input_shape=(1, MAX_SEQUENCE_LENGTH, 100, 10),
+			activation='relu'))
+	image_model1.add(MaxPooling3D((2,2,2), strides =(2,2)))
 	
+
 	main_model = Sequential()
 	main_model.add(Merge(
-		[image_model,embedding_model],
-		mode = 'concat',		
+		[image_model1,embedding_model],
+		mode = 'concat',
 		concat_axis = 1))
 	main_model.add(LSTM(1001))
 	main_model.add(Dropout(0.5))
 	main_model.add(Dense(1001,activation='softmax'))
-	
+
 	return main_model
 
 def vis_lstm_2():
@@ -38,21 +47,21 @@ def vis_lstm_2():
 		embedding_matrix.shape[1],
 		weights = [embedding_matrix],
 		trainable = False))
-	
+
 	image_model_1 = Sequential()
 	image_model_1.add(Dense(
 		embedding_matrix.shape[1],
 		input_dim=4096,
 		activation='linear'))
 	image_model_1.add(Reshape((1,embedding_matrix.shape[1])))
-	
+
 	image_model_2 = Sequential()
 	image_model_2.add(Dense(
 		embedding_matrix.shape[1],
 		input_dim=4096,
 		activation='linear'))
 	image_model_2.add(Reshape((1,embedding_matrix.shape[1])))
-	
+
 	main_model = Sequential()
 	main_model.add(Merge(
 		[image_model_1,embedding_model,image_model_2],
@@ -61,7 +70,7 @@ def vis_lstm_2():
 	main_model.add(LSTM(1001))
 	main_model.add(Dropout(0.5))
 	main_model.add(Dense(1001,activation='softmax'))
-	
+
 	return main_model
 
 def VGG_16(weights_path=None):
@@ -111,8 +120,5 @@ def VGG_16(weights_path=None):
 
 	if weights_path:
 		model.load_weights(weights_path)
-	
-	return model
-    
 
-	
+	return model

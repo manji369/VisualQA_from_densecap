@@ -18,23 +18,16 @@ def main():
 	answers_train = prepare_data.get_answers_matrix('train')
 	answers_val = prepare_data.get_answers_matrix('val')
 	print('Loading image features ...')
-	img_features_train = prepare_data.get_coco_features('train')
-	img_features_val = prepare_data.get_coco_features('val')
+	# img_features_train = prepare_data.get_coco_features('train')
+	# img_features_val = prepare_data.get_coco_features('val')
+	caption_matrices_train = prepare_data.get_3D_matrices('train')
+	caption_matrices_val = prepare_data.get_3D_matrices('val')
 	print('Creating model ...')
-	
-	if args.model == 1:
-		model = models.vis_lstm()
-		X_train = [img_features_train, questions_train]
-		X_val = [img_features_val, questions_val]
-		model_path = 'weights/model_1.h5'
-	elif args.model == 2:
-		model = models.vis_lstm_2()
-		X_train = [img_features_train, questions_train, img_features_train]
-		X_val = [img_features_val, questions_val, img_features_val]
-		model_path = 'weights/model_2.h5'
-	else:
-		print('Invalid model selection!\nAvailable choices: 1 for vis-lstm and 2 for 2-vis-lstm.')
-		sys.exit()
+
+	model = models.vis_lstm()
+	X_train = [caption_matrices_train, questions_train]
+	X_val = [caption_matrices_val, questions_val]
+	model_path = 'weights/model_1.h5'
 
 	model.compile(optimizer='adam',
 		loss='categorical_crossentropy',
@@ -49,4 +42,3 @@ def main():
 	model.save(model_path)
 
 if __name__ == '__main__':main()
-
