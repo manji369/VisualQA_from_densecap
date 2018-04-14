@@ -30,13 +30,28 @@ def preprocess_question(question):
 	seq = np.reshape(seq,(1,len(seq)))
 	return seq
 
-def generate_answer(img_path, question, model):
+def get_3D_matrix(captions, embeddings):
+    res = []
+    for caption in captions:
+        sentence = [np.asarray([0]*300,dtype='float32')]*MAX_LEN
+        words = word_tokenize(caption)
+        for i, word in enumerate(words):
+            sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
+        res.append(sentence)
+    res = np.asarray(res)
+	res = res.swapaxes(0,1)
+	res = res.swapaxes(1,2)
+	res = res.swapaxes(2,3)
+	return res
+
+def generate_answer(captions, question, model, embeddings):
 	model_path = 'weights/model_'+str(model)+'.h5'
 	model = load_model(model_path)
-	img_features = extract_image_features(img_path)
+	# img_features = extract_image_features(img_path)
+	captions_matrix = get_3D_matrix(captions.split(','), embeddings)
 	seq = preprocess_question(question)
 	if model == 1:
-		x = [img_features, seq]
+		x = [captions_matrix, seq]
 	else:
 		x = [img_features, seq, img_features]
 	probabilities = model.predict(x)[0]
@@ -44,19 +59,20 @@ def generate_answer(img_path, question, model):
 	top_answers = [prepare_data.top_answers[answers[-1]],
 		prepare_data.top_answers[answers[-2]],
 		prepare_data.top_answers[answers[-3]]]
-	
+
 	return top_answers
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-image', type=str, required=True)
+	parser.add_argument('-captions', type=str, required=True)
 	parser.add_argument('-question', type=str, required=True)
 	parser.add_argument('-model', type=int, default=2)
 	args = parser.parse_args()
 	if args.model != 1 and args.model != 2:
 		print('Invalid model selection.')
 		sys.exit()
-	top_answers = generate_answer(args.image, args.question, args.model)
+	embeddings = prepare_data.load_embeddings()
+	top_answers = generate_answer(args.captions, args.question, args.model, embeddings)
 	print('Top answers: %s, %s, %s.' % (top_answers[0],top_answers[1],top_answers[2]))
 
 if __name__ == '__main__':main()
