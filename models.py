@@ -12,6 +12,10 @@ def vis_lstm():
 		2195885,
 		300,
 		trainable = False))
+	embedding_model.add(Dense(
+	10
+	))
+	print(embedding_model.summary())
 
 	#image_model = Sequential()
 	#image_model.add(Dense(
@@ -21,13 +25,14 @@ def vis_lstm():
 	# image_model.add(Reshape((1,embedding_matrix.shape[1])))
 
 	image_model1 = Sequential()
-	image_model1.add(Convolution3D(10, 3, 300, 10,
-            border_mode='same',
-            input_shape=(1, MAX_SEQUENCE_LENGTH, 300, 10),
+	image_model1.add(Convolution3D(1, 10, 3, 300,
+            border_mode='valid',
+            input_shape=(10, MAX_SEQUENCE_LENGTH, 300, 1),
 			activation='relu'))
+	image_model1.add(MaxPooling3D((1,2,1), strides =(1,1,1)))
+	image_model1.add(Reshape((1, 10)))
 	print(image_model1.summary())
-	# image_model1.add(MaxPooling3D((2,2,2), strides =(2,2,2)))
-	
+
 
 	main_model = Sequential()
 	main_model.add(Merge(
