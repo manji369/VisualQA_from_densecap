@@ -88,7 +88,12 @@ def get_3D_matrices(split):
 		print('Invalid split!')
 		sys.exit()
 	df = pd.read_pickle(data_path)
-	matrices = df[['caption_matrix']].values.tolist()
+	matrices = np.asarray(df[['caption_matrix']].values.tolist())
+	print(matrices.shape)
+	matrices = matrices.swapaxes(1,2)
+	matrices = matrices.swapaxes(2,3)
+	matrices = matrices.swapaxes(3,4)
+	print(matrices.shape)
 	return matrices
 
 
@@ -151,3 +156,6 @@ def get_3D_matrix(captions, embeddings):
             sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
         res.append(sentence)
     return res
+
+if __name__ == '__main__':
+	get_3D_matrices('train')

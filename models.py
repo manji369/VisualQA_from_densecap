@@ -5,12 +5,13 @@ from keras.layers import Dense, Embedding, LSTM, Merge, Reshape, Dropout, Convol
 MAX_SEQUENCE_LENGTH = 13
 
 def vis_lstm():
-	# embedding_matrix = embedding.load()
+	embedding_matrix = embedding.load()
 	# print(embedding_matrix.shape)
 	embedding_model = Sequential()
 	embedding_model.add(Embedding(
-		2195885,
-		300,
+		embedding_matrix.shape[0],
+		embedding_matrix.shape[1],
+		weights = [embedding_matrix],
 		trainable = False))
 	embedding_model.add(Dense(
 	10
