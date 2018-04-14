@@ -5,27 +5,28 @@ from keras.layers import Dense, Embedding, LSTM, Merge, Reshape, Dropout, Convol
 MAX_SEQUENCE_LENGTH = 13
 
 def vis_lstm():
-	embedding_matrix = embedding.load()
+	# embedding_matrix = embedding.load()
+	# print(embedding_matrix.shape)
 	embedding_model = Sequential()
 	embedding_model.add(Embedding(
-		embedding_matrix.shape[0],
-		embedding_matrix.shape[1],
-		weights = [embedding_matrix],
+		2195885,
+		300,
 		trainable = False))
 
-	image_model = Sequential()
-	image_model.add(Dense(
-		embedding_matrix.shape[1],
-		input_dim=4096,
-		activation='linear'))
-	image_model.add(Reshape((1,embedding_matrix.shape[1])))
+	#image_model = Sequential()
+	#image_model.add(Dense(
+	#	embedding_matrix.shape[1],
+	#	input_dim=4096,
+	#	activation='linear'))
+	# image_model.add(Reshape((1,embedding_matrix.shape[1])))
 
 	image_model1 = Sequential()
-	image_model1.add(Convolution3D(10, 3, 100, 10,
+	image_model1.add(Convolution3D(10, 3, 300, 10,
             border_mode='same',
-            input_shape=(1, MAX_SEQUENCE_LENGTH, 100, 10),
+            input_shape=(1, MAX_SEQUENCE_LENGTH, 300, 10),
 			activation='relu'))
-	image_model1.add(MaxPooling3D((2,2,2), strides =(2,2)))
+	print(image_model1.summary())
+	# image_model1.add(MaxPooling3D((2,2,2), strides =(2,2,2)))
 	
 
 	main_model = Sequential()
@@ -122,3 +123,6 @@ def VGG_16(weights_path=None):
 		model.load_weights(weights_path)
 
 	return model
+
+if __name__ == '__main__':
+	vis_lstm()
