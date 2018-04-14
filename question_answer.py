@@ -10,6 +10,8 @@ from keras.applications.vgg16 import preprocess_input
 from keras.preprocessing import image
 from keras.models import load_model
 
+MAX_LEN = 13
+
 def extract_image_features(img_path):
 	model = models.VGG_16('weights/vgg16_weights.h5')
 	img = image.load_img(img_path,target_size=(224,224))
@@ -31,29 +33,28 @@ def preprocess_question(question):
 	return seq
 
 def get_3D_matrix(captions, embeddings):
-    res = []
+    res = [[]]
     for caption in captions:
-        sentence = [np.asarray([0]*300,dtype='float32')]*MAX_LEN
+        sentence = [np.asarray([[0]]*300,dtype='float32')]*MAX_LEN
         words = word_tokenize(caption)
         for i, word in enumerate(words):
-            sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
-        res.append(sentence)
+            sentence[i] = [[x] for x in embeddings.get(word, np.asarray([0]*300,dtype='float32'))]
+        res[0].append(sentence)
     res = np.asarray(res)
-	res = res.swapaxes(0,1)
-	res = res.swapaxes(1,2)
-	res = res.swapaxes(2,3)
-	return res
+    print(res.shape)
+    #res = res.swapaxes(0,1)
+    #res = res.swapaxes(1,2)
+    #res = res.swapaxes(2,3)
+    return res
 
 def generate_answer(captions, question, model, embeddings):
 	model_path = 'weights/model_'+str(model)+'.h5'
-	model = load_model(model_path)
+	model = models.vis_lstm()
+	model.load_weights(model_path)
 	# img_features = extract_image_features(img_path)
 	captions_matrix = get_3D_matrix(captions.split(','), embeddings)
 	seq = preprocess_question(question)
-	if model == 1:
-		x = [captions_matrix, seq]
-	else:
-		x = [img_features, seq, img_features]
+	x = [captions_matrix, seq]
 	probabilities = model.predict(x)[0]
 	answers = np.argsort(probabilities[:1000])
 	top_answers = [prepare_data.top_answers[answers[-1]],
@@ -71,8 +72,10 @@ def main():
 	if args.model != 1 and args.model != 2:
 		print('Invalid model selection.')
 		sys.exit()
-	embeddings = prepare_data.load_embeddings()
+	# embeddings = prepare_data.load_embeddings()
+	embeddings = {}
 	top_answers = generate_answer(args.captions, args.question, args.model, embeddings)
 	print('Top answers: %s, %s, %s.' % (top_answers[0],top_answers[1],top_answers[2]))
+	get_3D_matrix(args.captions.split(','), embeddings)
 
 if __name__ == '__main__':main()

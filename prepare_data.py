@@ -132,7 +132,7 @@ def get_coco_features(split):
 def load_embeddings():
 	embeddings = {}
 	cnt = 0
-	with open('./../embeddings/glove.840B.300d.txt','r') as f:
+	with open('./embeddings/glove.840B.300d.txt','r') as f:
 	    for i, line in enumerate(f):
 	        values = line.split()
 	        word = values[0]
