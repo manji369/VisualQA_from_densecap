@@ -13,8 +13,7 @@ from keras.models import load_model
 
 MAX_LEN = 13
 
-def preprocess_question(question):
-	word_idx = ebd.load_idx()
+def preprocess_question(question, word_idx):
 	tokens = word_tokenize(question)
 	seq = []
 	for token in tokens:
@@ -40,9 +39,9 @@ def load_model():
 	model.load_weights(model_path)
 	return model
 
-def generate_answers(caption_matrix, question, model):
+def generate_answers(caption_matrix, question, model, word_idx):
     # captions_matrix = get_3D_matrix(captions, embeddings)
-	seq = preprocess_question(question)
+	seq = preprocess_question(question, word_idx)
 	x = [caption_matrix, seq]
 	probabilities = model.predict(x)[0]
 	answers = np.argsort(probabilities[:1000])
@@ -61,6 +60,7 @@ def evaluate_val():
     val_path = 'data/valv1.pkl'
     # embeddings = prepare_data.load_embeddings()
     model = load_model()
+    word_idx = ebd.load_idx()
     df = pd.read_pickle(val_path)
     questions = df[['questions']].values.tolist()
     captions_matrix = np.asarray(df[['caption_matrix']].values.tolist())
@@ -85,7 +85,7 @@ def evaluate_val():
         print(question_id)
         print(answer)
         print(caption)
-        top_answers = generate_answers(caption_matrix, question, model)
+        top_answers = generate_answers(caption_matrix, question, model, word_idx)
         data['image_id'].append(image_id)
         data['captions'].append(caption)
         data['questions'].append(question)
