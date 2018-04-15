@@ -73,8 +73,9 @@ def evaluate_val():
     question_ids = df[['question_ids']].values.tolist()
     data = {'image_id': [], 'captions': [], 'questions': [], 'answers': [], 'question_ids': [], 'top_answers': []}
     cnt = 0
+    excnt = 0
     for question, caption_matrix, image_id, question_id, answer, caption in zip(questions, captions_matrix, image_ids, question_ids, answers, captions):
-        print(cnt)
+        print("cnt: {0}, excnt:{1}, df:{2}".format(cnt, excnt, len(image_ids)))
         question = question[0]
         caption_matrix = np.asarray(caption_matrix)
         # caption_matrix = transf(caption_matrix)
@@ -85,7 +86,12 @@ def evaluate_val():
         #print(question_id)
         #print(answer)
         #print(caption)
-        top_answers = generate_answers(caption_matrix, question, model, word_idx)
+        try:
+            top_answers = generate_answers(caption_matrix, question, model, word_idx)
+        except Exception as ex:
+            print(ex)
+            excnt += 1
+            print("Exception number {0}".format(excnt))
         data['image_id'].append(image_id)
         data['captions'].append(caption)
         data['questions'].append(question)
