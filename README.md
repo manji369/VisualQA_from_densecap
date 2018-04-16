@@ -4,6 +4,10 @@ It uses CNN to process the captions and answer questions.
 
 Details about the dataset are explained at the [VisualQA website](http://www.visualqa.org/).
 
+## Model
+
+<img src="model.png">
+
 ## Requirements
 
 * Python 2.7
