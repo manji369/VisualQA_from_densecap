@@ -10,6 +10,7 @@ from keras.preprocessing.sequence import pad_sequences
 
 TRAIN_DATA_PATH = 'data/trainv1.pkl'
 VAL_DATA_PATH = 'data/valv1.pkl'
+MAX_LEN = 13
 
 def int_to_answers():
 	data_path = TRAIN_DATA_PATH
@@ -97,38 +98,6 @@ def get_3D_matrices(split):
 	return matrices
 
 
-def get_coco_features(split):
-	if split == 'train':
-		data_path = TRAIN_DATA_PATH
-	elif split == 'val':
-		data_path = VAL_DATA_PATH
-	else:
-		print('Invalid split!')
-		sys.exit()
-
-	id_map_path = 'coco_features/coco_vgg_IDMap.txt'
-	features_path = 'coco_features/vgg_feats.mat'
-
-	img_labels = pd.read_pickle(data_path)[['image_id']].values.tolist()
-	img_ids = open(id_map_path).read().splitlines()
-	features_struct = sc.io.loadmat(features_path)
-
-	id_map = {}
-	for ids in img_ids:
-		ids_split = ids.split()
-		id_map[int(ids_split[0])] = int(ids_split[1])
-
-	VGGfeatures = features_struct['feats']
-	nb_dimensions = VGGfeatures.shape[0]
-	nb_images = len(img_labels)
-	image_matrix = np.zeros((nb_images,nb_dimensions))
-
-	for i in range(nb_images):
-		image_matrix[i,:] = VGGfeatures[:,id_map[img_labels[i][0]]]
-
-	return image_matrix
-
-
 def load_embeddings():
 	embeddings = {}
 	cnt = 0
@@ -145,7 +114,6 @@ def load_embeddings():
 	        embeddings[word] = coefs
 	return embeddings
 
-MAX_LEN = 11
 
 def get_3D_matrix(captions, embeddings):
     res = []

@@ -18,8 +18,6 @@ def main():
 	answers_train = prepare_data.get_answers_matrix('train')
 	answers_val = prepare_data.get_answers_matrix('val')
 	print('Loading image features ...')
-	# img_features_train = prepare_data.get_coco_features('train')
-	# img_features_val = prepare_data.get_coco_features('val')
 	caption_matrices_train = prepare_data.get_3D_matrices('train')
 	caption_matrices_val = prepare_data.get_3D_matrices('val')
 	print('Creating model ...')

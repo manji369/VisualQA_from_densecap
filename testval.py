@@ -50,12 +50,6 @@ def generate_answers(caption_matrix, question, model, word_idx):
 	prepare_data.top_answers[answers[-3]]]
 	return top_answers
 
-def transf(c):
-    c = np.asarray([[x] for x in c])
-    c = c.swapaxes(0, 4)
-    print(c.shape)
-    return c
-
 def evaluate_val():
     val_path = 'data/valv1.pkl'
     # embeddings = prepare_data.load_embeddings()
@@ -78,14 +72,7 @@ def evaluate_val():
         print("cnt: {0}, excnt:{1}, df:{2}".format(cnt, excnt, len(image_ids)))
         question = question[0]
         caption_matrix = np.asarray(caption_matrix)
-        # caption_matrix = transf(caption_matrix)
         caption_matrix = np.asarray([caption_matrix])
-        #print(caption_matrix.shape)
-        #print(question)
-        #print(image_id)
-        #print(question_id)
-        #print(answer)
-        #print(caption)
         try:
             top_answers = generate_answers(caption_matrix, question, model, word_idx)
         except Exception as ex:
