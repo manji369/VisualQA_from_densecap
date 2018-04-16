@@ -10,7 +10,7 @@ Object referring is important in visual question answering, as well as human rob
 
 **Architecture :**
 
-![image alt text](image_0.png)
+![image_0](https://user-images.githubusercontent.com/16779567/38787733-b1db5bda-40e4-11e8-921a-f085a822c764.png)
 
 				Fig.1. Block diagram
 
@@ -20,13 +20,14 @@ As shown in the diagram above, the first step is to generate the image captions 
 
 **Model :**
 
-![image alt text](image_1.png)
+![image_1](https://user-images.githubusercontent.com/16779567/38787734-b1f2d116-40e4-11e8-9889-1f4e5f23b95c.png)
 
 **			**Fig.2 Convolution Neural Network Architecture
 
 The top 10 captions from the image are represented as a set of 10 2D matrices, stacked to form a 3D matrix with dimensions as 10 x 300 x maximum_sequence_length , where the maximum_sequence_length is the maximum possible length of any caption in the dataset.
 
-![image alt text](image_2.png)
+![image_2](https://user-images.githubusercontent.com/16779567/38787735-b207839a-40e4-11e8-8bdd-c51669313183.png)
+
 
 			Fig.3. Neural Network Model Architecture
 
