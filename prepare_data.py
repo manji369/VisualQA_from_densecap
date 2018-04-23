@@ -8,8 +8,8 @@ from collections import defaultdict
 from nltk import word_tokenize
 from keras.preprocessing.sequence import pad_sequences
 
-TRAIN_DATA_PATH = 'data/train.pkl'
-VAL_DATA_PATH = 'data/val.pkl'
+TRAIN_DATA_PATH = 'data/train_spat.pkl'
+VAL_DATA_PATH = 'data/val_spat.pkl'
 MAX_LEN = 13
 
 def int_to_answers():
