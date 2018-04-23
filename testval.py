@@ -52,7 +52,7 @@ def generate_answers(caption_matrix, question, model, word_idx, spatial_matrix):
 	return top_answers
 
 def evaluate_val():
-    val_path = 'data/val.pkl'
+    val_path = 'data/val_spat.pkl'
     # embeddings = prepare_data.load_embeddings()
     model = load_model()
     word_idx = ebd.load_idx()
@@ -62,7 +62,7 @@ def evaluate_val():
     captions_matrix = captions_matrix.swapaxes(1,2)
     captions_matrix = captions_matrix.swapaxes(2,3)
     captions_matrix = captions_matrix.swapaxes(3,4)
-	spatial_matrix = np.asarray(df[['spatial_matrix']].values.tolist())
+    spatial_matrix = np.asarray(df[['spatial_matrix']].values.tolist())
     captions = df[['captions']].values.tolist()
     answers = df[['answers']].values.tolist()
     image_ids = df[['image_id']].values.tolist()
@@ -90,7 +90,7 @@ def evaluate_val():
         #print('Top answers: %s, %s, %s.' % (top_answers[0],top_answers[1],top_answers[2]))
         cnt += 1
     df_new = pd.DataFrame(data=data)
-    df_new.to_pickle('data/test.pkl')
+    df_new.to_pickle('data/test_spat.pkl')
 
 def main():
 	evaluate_val()
