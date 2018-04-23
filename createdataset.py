@@ -38,6 +38,7 @@ for img_id in mp:
     captions = mp[img_id][0]
     for caption in captions:
         MAX_LEN = max(len(caption.split(' ')), MAX_LEN)
+print(MAX_LEN)
 
 embeddings = {}
 cnt = 0
@@ -59,6 +60,7 @@ def get3DMatrix(captions, embeddings):
         sentence = [np.asarray([0]*300,dtype='float32')]*MAX_LEN
         words = word_tokenize(caption)
         for i, word in enumerate(words):
+            print((i, MAX_LEN))
             sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
         res.append(sentence)
     return np.asarray(res)
