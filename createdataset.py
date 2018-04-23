@@ -103,7 +103,7 @@ print("Completed creating spatial map")
 
 data = {'image_id': [], 'captions': [], 'questions': [], 'answers': [], 'question_ids': [], 'caption_matrix': [], 'spatial_matrix': []}
 for image_id in mp:
-    captions, questions, answers = mp[image_id]
+    captions, questions, answers, spat = mp[image_id]
     question_answers = []
     questionsMod = {}
     answersMod = {}
