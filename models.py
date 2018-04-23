@@ -31,9 +31,10 @@ def vis_lstm():
 
 	spatial_model = Sequential()
 	spatial_model.add(Dense(
-	10,
-	input_shape=(10, 10)
+	1,
+	input_shape=(1, 10, 10)
 	))
+	spatial_model.add(Reshape((1, 10)))
 	print(spatial_model.summary())
 
 	main_model = Sequential()
