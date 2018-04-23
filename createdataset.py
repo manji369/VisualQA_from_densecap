@@ -4,16 +4,16 @@ import pandas as pd
 MAX_LEN = 0
 NUM_PARTS = 6
 
-with open('results_train/questions.json') as f:
+with open('data/questions.json') as f:
     cont = f.read()
 questions = json.loads(cont)
-with open('results_train/annotations.json') as f:
+with open('data/annotations.json') as f:
     cont = f.read()
 answers = json.loads(cont)
 
 mp = {}
 for i in range(NUM_PARTS):
-    with open('results_train/results_train_{0}.json'.format(i)) as f:
+    with open('data/results_train_{0}.json'.format(i)) as f:
         cont = f.read()
     results = json.loads(cont)
     for result in results['results']:
