@@ -60,8 +60,11 @@ def get3DMatrix(captions, embeddings):
         sentence = [np.asarray([0]*300,dtype='float32')]*MAX_LEN
         words = word_tokenize(caption)
         for i, word in enumerate(words):
-            print((i, MAX_LEN))
-            sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
+            try:
+                sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
+            except:
+                print((i, MAX_LEN))
+                return
         res.append(sentence)
     return np.asarray(res)
 
