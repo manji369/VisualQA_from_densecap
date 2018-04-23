@@ -17,14 +17,17 @@ def main():
 	print('Loading answers ...')
 	answers_train = prepare_data.get_answers_matrix('train')
 	answers_val = prepare_data.get_answers_matrix('val')
-	print('Loading image features ...')
+	print('Loading caption matrices ...')
 	caption_matrices_train = prepare_data.get_3D_matrices('train')
 	caption_matrices_val = prepare_data.get_3D_matrices('val')
+	print('Loading spatial matrices ...')
+	spatial_matrices_train = prepare_data.get_spatial_matrices('train')
+	spatial_matrices_val = prepare_data.get_spatial_matrices('val')
 	print('Creating model ...')
 
 	model = models.vis_lstm()
-	X_train = [caption_matrices_train, questions_train]
-	X_val = [caption_matrices_val, questions_val]
+	X_train = [caption_matrices_train, questions_train, spatial_matrices_train]
+	X_val = [caption_matrices_val, questions_val, spatial_matrices_val]
 	model_path = 'weights/model_1.h5'
 
 	model.compile(optimizer='adam',

@@ -125,5 +125,20 @@ def get_3D_matrix(captions, embeddings):
         res.append(sentence)
     return res
 
+
+def get_spatial_matrices(split):
+	if split == 'train':
+		data_path = TRAIN_DATA_PATH
+	elif split == 'val':
+		data_path = VAL_DATA_PATH
+	else:
+		print('Invalid split!')
+		sys.exit()
+	df = pd.read_pickle(data_path)
+	matrices = np.asarray(df[['spatial_matrix']].values.tolist())
+	print(matrices.shape)
+	return matrices
+
+
 if __name__ == '__main__':
 	get_3D_matrices('train')

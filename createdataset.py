@@ -34,6 +34,7 @@ if split == 'train':
             mp[img_id].append(result['captions'][:10])
             mp[img_id].append([])
             mp[img_id].append([])
+            mp[img_id].append(result['boxes'][:10])
 else:
     with open('data/results_val.json') as f:
         cont = f.read()
@@ -44,6 +45,7 @@ else:
         mp[img_id].append(result['captions'][:10])
         mp[img_id].append([])
         mp[img_id].append([])
+        mp[img_id].append(result['boxes'][:10])
 print("Completed reading captions")
 for question in questions['questions']:
     img_id, question, question_id = question['image_id'], question['question'], question['question_id']
@@ -84,7 +86,19 @@ for image_id in mp:
     matrix_map[image_id] = get3DMatrix(captions, embeddings)
 print("Completed creating 3D matrices")
 
-data = {'image_id': [], 'captions': [], 'questions': [], 'answers': [], 'question_ids': [], 'caption_matrix': []}
+spatial_map = {}
+for image_id in mp:
+    boxes = mp[image_id][3]
+    points = [((box[0]+box[2])/2, (box[1]+box[2])/2) for box in boxes]
+    res = np.asarray([np.asarray([0]*10) for _ in range(10)])
+    for i in range(10):
+        for j in range(10):
+            res[i][j] = euclideanDist(points[i], points[j])
+    spatial_map[image_id] = res
+print("Completed creating spatial map")
+
+
+data = {'image_id': [], 'captions': [], 'questions': [], 'answers': [], 'question_ids': [], 'caption_matrix': [], 'spatial_matrix': []}
 for image_id in mp:
     captions, questions, answers = mp[image_id]
     question_answers = []
@@ -103,6 +117,7 @@ for image_id in mp:
         data['answers'].append(answer)
         data['question_ids'].append(question_id)
         data['caption_matrix'].append(matrix_map[image_id])
+        data['spatial_matrix'].append(spatial_map[image_id])
 
 
 df = pd.DataFrame(data=data)
