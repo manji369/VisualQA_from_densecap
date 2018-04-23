@@ -39,10 +39,11 @@ def load_model():
 	model.load_weights(model_path)
 	return model
 
-def generate_answers(caption_matrix, question, model, word_idx):
+
+def generate_answers(caption_matrix, question, model, word_idx, spatial_matrix):
     # captions_matrix = get_3D_matrix(captions, embeddings)
 	seq = preprocess_question(question, word_idx)
-	x = [caption_matrix, seq]
+	x = [caption_matrix, seq, spatial_matrix]
 	probabilities = model.predict(x)[0]
 	answers = np.argsort(probabilities[:1000])
 	top_answers = [prepare_data.top_answers[answers[-1]],
@@ -61,6 +62,7 @@ def evaluate_val():
     captions_matrix = captions_matrix.swapaxes(1,2)
     captions_matrix = captions_matrix.swapaxes(2,3)
     captions_matrix = captions_matrix.swapaxes(3,4)
+	spatial_matrix = np.asarray(df[['spatial_matrix']].values.tolist())
     captions = df[['captions']].values.tolist()
     answers = df[['answers']].values.tolist()
     image_ids = df[['image_id']].values.tolist()
@@ -74,7 +76,7 @@ def evaluate_val():
         caption_matrix = np.asarray(caption_matrix)
         caption_matrix = np.asarray([caption_matrix])
         try:
-            top_answers = generate_answers(caption_matrix, question, model, word_idx)
+            top_answers = generate_answers(caption_matrix, question, model, word_idx, spatial_matrix)
         except Exception as ex:
             print(ex)
             excnt += 1
