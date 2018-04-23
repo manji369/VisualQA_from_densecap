@@ -2,7 +2,7 @@ from nltk import word_tokenize
 import json
 import pandas as pd
 import numpy as np
-MAX_LEN = 0
+MAX_LEN = 13
 NUM_PARTS = 6
 
 with open('data/questions.json') as f:
@@ -34,13 +34,6 @@ for answer in answers['annotations']:
     if img_id in mp:
         mp[img_id][2].append([question_id, multiple_choice_answer])
 
-for img_id in mp:
-    captions = mp[img_id][0]
-    for caption in captions:
-        MAX_LEN = max(len(caption.split(' ')), MAX_LEN)
-MAX_LEN += 1
-print(MAX_LEN)
-
 embeddings = {}
 cnt = 0
 with open('embeddings/glove.840B.300d.txt','r') as f:
@@ -60,7 +53,7 @@ def get3DMatrix(captions, embeddings):
     for caption in captions:
         sentence = [np.asarray([0]*300,dtype='float32')]*MAX_LEN
         words = word_tokenize(caption)
-        for i, word in enumerate(words):
+        for i, word in enumerate(words[:MAX_LEN]):
             sentence[i] = embeddings.get(word, np.asarray([0]*300,dtype='float32'))
         res.append(sentence)
     return np.asarray(res)
