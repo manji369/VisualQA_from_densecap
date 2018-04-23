@@ -86,6 +86,9 @@ for image_id in mp:
     matrix_map[image_id] = get3DMatrix(captions, embeddings)
 print("Completed creating 3D matrices")
 
+def euclideanDist(p1, p2):
+    return ((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)**0.5
+
 spatial_map = {}
 for image_id in mp:
     boxes = mp[image_id][3]
