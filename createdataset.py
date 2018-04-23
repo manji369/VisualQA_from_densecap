@@ -5,17 +5,37 @@ import numpy as np
 MAX_LEN = 13
 NUM_PARTS = 6
 
-with open('data/questions.json') as f:
+# split = 'train'
+split = 'val'
+
+if split == 'val':
+    q_path = 'data/questions_val.json'
+    a_path = 'data/annotations_val.json'
+else:
+    q_path = 'data/questions.json'
+    a_path = 'data/annotations.json'
+with open(q_path) as f:
     cont = f.read()
 questions = json.loads(cont)
-with open('data/annotations.json') as f:
+with open(a_path) as f:
     cont = f.read()
 answers = json.loads(cont)
 
 mp = {}
-for i in range(NUM_PARTS):
-    print(i)
-    with open('data/results_train_{0}.json'.format(i)) as f:
+if split == 'train':
+    for i in range(NUM_PARTS):
+        print(i)
+        with open('data/results_train_{0}.json'.format(i)) as f:
+            cont = f.read()
+        results = json.loads(cont)
+        for result in results['results']:
+            img_id = int(result['img_name'].split('.')[0].split('_')[-1])
+            mp[img_id] = []
+            mp[img_id].append(result['captions'][:10])
+            mp[img_id].append([])
+            mp[img_id].append([])
+else:
+    with open('data/results_val.json') as f:
         cont = f.read()
     results = json.loads(cont)
     for result in results['results']:
@@ -87,4 +107,7 @@ for image_id in mp:
 
 df = pd.DataFrame(data=data)
 print(df.head())
-df.to_pickle('train.pkl')
+if split == 'train':
+    df.to_pickle('data/train.pkl')
+else:
+    df.to_pickle('data/val.pkl')
