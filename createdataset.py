@@ -123,6 +123,6 @@ for image_id in mp:
 df = pd.DataFrame(data=data)
 print(df.head())
 if split == 'train':
-    df.to_pickle('data/train.pkl')
+    df.to_pickle('data/train_spat.pkl')
 else:
-    df.to_pickle('data/val.pkl')
+    df.to_pickle('data/val_spat.pkl')
