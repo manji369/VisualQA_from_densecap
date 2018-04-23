@@ -25,7 +25,7 @@ def main():
 	spatial_matrices_val = prepare_data.get_spatial_matrices('val')
 	print('Creating model ...')
 
-	model = models.vis_lstm()
+	model = models.vis_lstm_10()
 	X_train = [caption_matrices_train, questions_train, spatial_matrices_train]
 	X_val = [caption_matrices_val, questions_val, spatial_matrices_val]
 	model_path = 'weights/model_1.h5'
