@@ -22,6 +22,7 @@ for i in range(NUM_PARTS):
         mp[img_id].append(result['captions'][:10])
         mp[img_id].append([])
         mp[img_id].append([])
+print("Completed reading captions")
 for question in questions['questions']:
     img_id, question, question_id = question['image_id'], question['question'], question['question_id']
     if img_id in mp:
@@ -51,6 +52,7 @@ matrix_map = {}
 for image_id in mp:
     captions = mp[image_id][0]
     matrix_map[image_id] = get3DMatrix(captions, embeddings)
+print("Completed creating 3D matrices")
 
 data = {'image_id': [], 'captions': [], 'questions': [], 'answers': [], 'question_ids': [], 'caption_matrix': []}
 for image_id in mp:
