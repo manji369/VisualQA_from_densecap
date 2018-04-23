@@ -9,6 +9,8 @@ def vis_lstm():
 	# print(embedding_matrix.shape)
 	embedding_model = Sequential()
 	embedding_model.add(Embedding(
+	# 2195885,
+	# 300,
 		embedding_matrix.shape[0],
 		embedding_matrix.shape[1],
 		weights = [embedding_matrix],
@@ -27,10 +29,16 @@ def vis_lstm():
 	image_model1.add(Reshape((1, 10)))
 	print(image_model1.summary())
 
+	spatial_model = Sequential()
+	spatial_model.add(Dense(
+	10,
+	input_shape=(10, 10)
+	))
+	print(spatial_model.summary())
 
 	main_model = Sequential()
 	main_model.add(Merge(
-		[image_model1,embedding_model],
+		[image_model1,embedding_model,spatial_model],
 		mode = 'concat',
 		concat_axis = 1))
 	main_model.add(LSTM(1001))

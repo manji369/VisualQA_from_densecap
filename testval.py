@@ -51,7 +51,7 @@ def generate_answers(caption_matrix, question, model, word_idx):
 	return top_answers
 
 def evaluate_val():
-    val_path = 'data/valv1.pkl'
+    val_path = 'data/val.pkl'
     # embeddings = prepare_data.load_embeddings()
     model = load_model()
     word_idx = ebd.load_idx()
@@ -88,7 +88,7 @@ def evaluate_val():
         #print('Top answers: %s, %s, %s.' % (top_answers[0],top_answers[1],top_answers[2]))
         cnt += 1
     df_new = pd.DataFrame(data=data)
-    df_new.to_pickle('test.pkl')
+    df_new.to_pickle('data/test.pkl')
 
 def main():
 	evaluate_val()
