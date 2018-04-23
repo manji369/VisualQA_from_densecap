@@ -1,6 +1,7 @@
 from nltk import word_tokenize
 import json
 import pandas as pd
+import numpy as np
 MAX_LEN = 0
 NUM_PARTS = 6
 
@@ -13,6 +14,7 @@ answers = json.loads(cont)
 
 mp = {}
 for i in range(NUM_PARTS):
+    print(i)
     with open('data/results_train_{0}.json'.format(i)) as f:
         cont = f.read()
     results = json.loads(cont)
@@ -37,6 +39,19 @@ for img_id in mp:
     for caption in captions:
         MAX_LEN = max(len(caption.split(' ')), MAX_LEN)
 
+embeddings = {}
+cnt = 0
+with open('embeddings/glove.840B.300d.txt','r') as f:
+    for i, line in enumerate(f):
+        values = line.split()
+        word = values[0]
+        try:
+            coefs = np.asarray(values[1:],dtype='float32')
+        except Exception as ex:
+            cnt += 1
+            print("ex:{}/i:{}".format(cnt, i))
+            continue
+        embeddings[word] = coefs
 
 def get3DMatrix(captions, embeddings):
     res = []
