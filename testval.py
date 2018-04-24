@@ -51,10 +51,13 @@ def generate_answers(caption_matrix, question, model, word_idx, spatial_matrix):
 	prepare_data.top_answers[answers[-3]]]
 	return top_answers
 
-def evaluate_val():
+def evaluate_val(model_file):
+	suff = model_file.split('.')[0].replace('model_')
+	print(model_file)
+	print(suff)
     val_path = 'data/val_spat.pkl'
     # embeddings = prepare_data.load_embeddings()
-    model = load_model()
+    model = load_model(model_file)
     word_idx = ebd.load_idx()
     df = pd.read_pickle(val_path)
     questions = df[['questions']].values.tolist()
@@ -90,9 +93,12 @@ def evaluate_val():
         #print('Top answers: %s, %s, %s.' % (top_answers[0],top_answers[1],top_answers[2]))
         cnt += 1
     df_new = pd.DataFrame(data=data)
-    df_new.to_pickle('data/test_spat.pkl')
+    df_new.to_pickle('data/test_{0}.pkl'.format(suff))
 
 def main():
-	evaluate_val()
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-model_file', type=str, default='model_1.h5')
+	args = parser.parse_args()
+	evaluate_val(args.model_file)
 
 if __name__ == '__main__':main()
